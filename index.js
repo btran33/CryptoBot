@@ -30,8 +30,7 @@ const main = async function () {
     const service = new historical({start, end, interval, product})
     const data = await service.getData()
 
-    // console.log(data[0])
-    // console.log(data[1])
+    console.log(data)
 }
 
 /* For authenticated client, will utilized later down the line */

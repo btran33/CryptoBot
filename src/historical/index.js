@@ -1,19 +1,15 @@
 const CoinbasePro = require('coinbase-pro')
+const CandleStick = require('../models/candlestick')
 
 /**
- * Standard time-out function for API limit
- * @param {*} ms the time in miliseconds
- * @returns a Promise on timing out
+ * A historical service class, using Coinbase API to gather historical rates
+ *  of the desired cryptocurrency and parse them using the Candlestick model
  */
-function timeout(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 class HistoricalService {
 
     /**
      * Constructor of historical service class
-     * @param {*} {start, end, interval, product} the destructed set of Start time, End time, Interval time, and Product to query historical rates
+     * @param {*} {start, end, interval, product} the destructed set of Start time, End time, Interval time, and Product type to query historical rates
      */
     constructor({start, end, interval, product}) {
         this.start = start
@@ -24,8 +20,8 @@ class HistoricalService {
     }
 
     /**
-     * Main function to get historical rates
-     * @returns a list of historical rates between the initialized time domain
+     * Main function to get historical rates and parsed them as candlesticks
+     * @returns a list of historical rates between the initialized time domain, represented in candlesticks
      */
     async getData() {
         const intervals = this.createRequest()
@@ -35,7 +31,19 @@ class HistoricalService {
         const filtered = this.filterData(result)
         console.log('Filtered:', filtered.length)
 
-        return filtered
+        const candlesticks = filtered.map((x) => {
+            return new CandleStick({
+                interval: this.interval,
+                startTime: new Date(x[0] * 1e3),
+                low:    x[1],
+                high:   x[2],
+                open:   x[3],
+                close:  x[4],
+                volume: x[5]
+            })
+        })
+
+        return candlesticks
     }
 
     /**
@@ -114,8 +122,17 @@ class HistoricalService {
            We timeout each request for 1/3 second, up to 3 request per second */
         await timeout(1/3 * 1e3) 
         const next = await this.performIntervals(intervals.slice(1))
-        return result.reverse().concat(next)
+        return result.reverse().concat(next) // NOTE: we reverse the result for ascending time order
     }
+}
+
+/**
+ * Standard time-out function for API limit
+ * @param {*} ms the time in miliseconds
+ * @returns a Promise on timing out
+ */
+function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 module.exports = HistoricalService
