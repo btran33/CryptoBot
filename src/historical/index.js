@@ -11,7 +11,7 @@ class HistoricalService {
      * Constructor of historical service class
      * @param {*} {start, end, interval, product} the destructed set of Start time, End time, Interval time, and Product type to query historical rates
      */
-    constructor({start, end, interval, product}) {
+    constructor({ start, end, interval, product }) {
         this.start = start
         this.end = end
         this.interval = interval

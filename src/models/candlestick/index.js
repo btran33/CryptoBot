@@ -5,7 +5,7 @@ class CandleStick {
      * @param {*} {low, high, open, close, price, interval, startTime, volume} 
      * Destructed set of low, high, open and close price, as well as the interval, start time, and volume 
      */
-    constructor({low, high, open, close, price, interval, startTime = new Date(), volume}) {
+    constructor({ low, high, open, close, price, interval, startTime = new Date(), volume }) {
             this.low = low || price
             this.high = high || price
             this.open = open || price
