@@ -1,0 +1,24 @@
+{
+  "name": "cryptobot",
+  "version": "1.0.0",
+  "description": "A cryptocurrency trading bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/btran33/CryptoBot.git"
+  },
+  "author": "Ben Tran",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/btran33/CryptoBot/issues"
+  },
+  "homepage": "https://github.com/btran33/CryptoBot#readme",
+  "dependencies": {
+    "coinbase-pro": "^0.9.0",
+    "commander": "^9.3.0"
+  }
+}
