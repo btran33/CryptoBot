@@ -7,7 +7,7 @@ const now = new Date()
 const yesterday = new Date(now.getTime() - (24 * 60 * 60 * 1e3)) // js use miliseconds
 
 program.version('1.0.0')
-       .option('-i, --interval [int]', 'Interval in seconds for candlestick', 300)
+       .option('-i, --interval <int>', 'Interval in seconds for candlestick, mainly a multiple of 60', 300)
        .option('-p, --product <string>', 'Desired product identifier', 'BTC-USD')
        .option('-s, --start <int>', 'Start time in Unix seconds', toDate, yesterday)
        .option('-e, --end <int>', 'End time in Unix seconds', toDate, now)
@@ -16,7 +16,7 @@ program.version('1.0.0')
 /**
  * Simple function to convert time in miliseconds to Date class
  * @param {*} ms time in miliseconds
- * @returns 
+ * @returns the Date object with the initial time information
  */
 function toDate(ms) {
     return new Date(ms * 1e3)

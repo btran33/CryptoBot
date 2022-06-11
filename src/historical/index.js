@@ -32,19 +32,27 @@ class HistoricalService {
         const result = await this.performIntervals(intervals)
         console.log('Total:', result.length)
 
+        const filtered = this.filterData(result)
+        console.log('Filtered:', filtered.length)
+
+        return filtered
+    }
+
+    /**
+     * Helper function to help filter out duplicated time stamps
+     * @param {*} data the historical data to filter out
+     * @returns the filtered historical data
+     */
+    filterData(data) {
         const timeStamp = {}
-        const filtered = result.filter((x, i) => {
+        return data.filter((x) => {
             const str = `${x[0]}`
-            if (timeStamp[str] !== undefined) { 
-                return false 
+            if (timeStamp[str] !== undefined) {
+                return false
             }
             timeStamp[str] = true
             return true
         })
-
-        console.log('Filtered:', filtered.length)
-
-        return filtered
     }
 
     /**
