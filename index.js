@@ -1,6 +1,7 @@
 const program = require('commander')
-const config = require('./configuration')
+const config = require('./src/configuration')
 const historical = require('./src/historical')
+const BackTester = require('./src/backtester')
 
 // Get the current and yesterday's time as the default for Commander
 const now = new Date()
@@ -27,10 +28,14 @@ const main = async function () {
     
     const { interval, product, start, end } = program.opts()
 
-    const service = new historical({start, end, interval, product})
-    const data = await service.getData()
+    const tester = new BackTester({ start, end, interval, product })
+    console.log(tester)
+    await tester.begin()
 
-    console.log(data)
+    // const service = new historical({start, end, interval, product})
+    // const data = await service.getData()
+
+    // console.log(data)
 }
 
 /* For authenticated client, will utilized later down the line */
