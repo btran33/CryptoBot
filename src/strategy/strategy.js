@@ -12,10 +12,14 @@ class Strategy {
         this.positions = {}
     }
 
-    async run({ stick, curTime }){}
+    async run({ stick, time }){}
+
+    getPositions(){
+        return Object.keys(this.positions).map((k) => this.positions[k])
+    }
 
     openPosition() {
-        return this.positions.filter(p => p.state === 'open')
+        return this.getPositions().filter(p => p.state === 'open')
     }
 
     async positionOpened({ price, time, amount, id }) {
