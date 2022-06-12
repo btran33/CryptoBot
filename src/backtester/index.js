@@ -45,7 +45,7 @@ class BackTester {
             // })
 
             const total = positions.reduce((r, p) => {
-                return r + (p.exit ? p.profit() : 0)
+                return r +  p.profit()
             }, 0)
 
             const prof = `${total}`

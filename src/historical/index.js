@@ -120,7 +120,7 @@ class HistoricalService {
 
         /* For Coinbase: https://help.coinbase.com/en/pro/other-topics/api/faq-on-api
            We timeout each request for 1/3 second, up to 3 request per second */
-        await timeout(1/3 * 1e3) 
+        await timeout(333) 
         const next = await this.performIntervals(intervals.slice(1))
         return result.reverse().concat(next) // NOTE: we reverse the result for ascending time order
     }
