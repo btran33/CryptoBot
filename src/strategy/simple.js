@@ -11,22 +11,23 @@ class SimpleStrategy extends Strategy {
 
         const last = sticks[stickLength - 1].close
         const penUltimate = sticks[stickLength - 2].close
-        const price = last
+        const exit_price = last
 
         const open = this.openPosition()
         if (open.length == 0) {
             if (last < penUltimate) {
-                this.onBuySignal({ 
-                    price, 
+                
+                this.onBuySignal({
+                    price: exit_price, 
                     time 
                 })
             }
         } else {
             if (last > penUltimate) {
                 open.forEach(p => {
-                    if (p.enter.price * 1.01 < price){
+                    if (p.enter.price * 1.01 < exit_price){
                         this.onSellSignal({ 
-                            price, 
+                            price: exit_price, 
                             size: p.enter.size, 
                             position: p,
                             time

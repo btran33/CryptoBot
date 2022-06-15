@@ -28,8 +28,8 @@ class Position {
     }
 
     print() {
-        const enter = `Enter | ${colors.yellow(this.enter.price.toString())} | ${this.enter.time}`
-        const exit = this.exit ? `Exit | ${colors.magenta(this.exit.price.toString())} | ${this.exit.time}` : ''
+        const enter = `Enter | ${colors.yellow(this.enter.price.toFixed(2))} | ${this.enter.time}`
+        const exit = this.exit ? `Exit | ${colors.magenta(this.exit.price.toFixed(2))} | ${this.exit.time}` : ''
 
         var profit = ''
         if (this.state === 'closed'){

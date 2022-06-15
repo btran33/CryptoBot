@@ -1,6 +1,6 @@
 const CandleStick = require('../models/candlestick')
 const Historical = require('../historical')
-const { SimpleStrategy } = require('../strategy')
+const { SimpleStrategy, SimpleMACD } = require('../strategy')
 const randomstring = require('randomstring')
 const colors = require('colors/safe')
  
@@ -18,7 +18,7 @@ class BackTester {
     async begin() {
         try{
             const history = await this.historical.getData()
-            this.strategy = new SimpleStrategy({
+            this.strategy = new SimpleMACD({
                 onBuySignal: (x) => { this.onBuySignal(x) },
                 onSellSignal: (x) => { this.onSellSignal(x) }
             })
@@ -38,11 +38,11 @@ class BackTester {
 
             console.log(positions.length, 'Positions')
 
-            // positions.forEach((p, i) => {
-            //     if (p.enter === undefined || p.exit === undefined){
-            //         console.log(`${i}th`, p)
-            //     }
-            // })
+            positions.forEach((p, i) => {
+                if (p.enter === undefined || p.exit === undefined){
+                    console.log(`${i}th`, p)
+                }
+            })
 
             const total = positions.reduce((r, p) => {
                 return r +  p.profit()
@@ -53,7 +53,7 @@ class BackTester {
             console.log(`Total: ${colored}`)
 
         } catch (e) {
-            console.log(e)
+            console.log('BackTester Error:', e)
         }
     }
 
