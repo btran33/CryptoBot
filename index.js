@@ -12,6 +12,7 @@ program.version('1.0.0')
        .option('-p, --product <string>', 'Desired product identifier', 'BTC-USD')
        .option('-s, --start <int>', 'Start time in Unix seconds', toDate, yesterday)
        .option('-e, --end <int>', 'End time in Unix seconds', toDate, now)
+       .option('-t, --strategy <string>', 'Strategy type, in string', 'macd')
        .parse(process.argv)
 
 /**
@@ -26,16 +27,13 @@ function toDate(ms) {
 const main = async function () {
     console.log(program.opts())
     
-    const { interval, product, start, end } = program.opts()
+    const { interval, product, start, end, strategy } = program.opts()
 
-    const tester = new BackTester({ start, end, interval, product })
-    console.log(tester)
+    const tester = new BackTester({ 
+        start, end, interval, product, strategyType: strategy 
+    })
+
     await tester.begin()
-
-    // const service = new historical({start, end, interval, product})
-    // const data = await service.getData()
-
-    // console.log(data)
 }
 
 /* For authenticated client, will utilized later down the line */

@@ -1,15 +1,16 @@
 const CandleStick = require('../models/candlestick')
 const Historical = require('../historical')
-const { SimpleStrategy, SimpleMACD } = require('../strategy')
+const { SimpleStrategy, SimpleMACD, Factory } = require('../strategy')
 const randomstring = require('randomstring')
 const colors = require('colors/safe')
  
 class BackTester {
-    constructor({ start, end, interval, product }) {
+    constructor({ start, end, interval, product, strategyType }) {
         this.startTime = start
         this.endTime = end
         this.interval = interval
         this.product = product
+        this.strategyType = strategyType
         this.historical = new Historical({
             start, end, interval, product
         })
@@ -18,7 +19,7 @@ class BackTester {
     async begin() {
         try{
             const history = await this.historical.getData()
-            this.strategy = new SimpleMACD({
+            this.strategy = Factory.create(this.strategyType, {
                 onBuySignal: (x) => { this.onBuySignal(x) },
                 onSellSignal: (x) => { this.onSellSignal(x) }
             })
