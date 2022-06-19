@@ -23,7 +23,7 @@ class SimpleMACD extends Strategy {
         const last = histogram[length - 1]
         const penUltimate = histogram[length - 2]
 
-        const boundary = 0.5
+        const boundary = 0.5 // adjust boundary to vary the cross-over point
         const wasAbove = penUltimate > boundary
         const wasBelow = penUltimate < -boundary
         const isAbove = last > boundary

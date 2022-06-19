@@ -1,4 +1,6 @@
-
+/**
+ * The class representing a candlestick in the historical rates of a cryptocurrency
+ */
 class CandleStick {
     /**
      * Default constructor of the candlestick model class

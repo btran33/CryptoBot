@@ -3,8 +3,16 @@ const Historical = require('../historical')
 const { SimpleStrategy, SimpleMACD, Factory } = require('../strategy')
 const randomstring = require('randomstring')
 const colors = require('colors/safe')
- 
+
+/**
+ * The class representing the backtester for our strategies
+ */
 class BackTester {
+    
+    /**
+     * Constructor of the backtester object
+     * @param {*} { start, end, interval, product, strategyType } destructed set of our start time, end time, historical interval, cryptocurrency name, and strategy name
+     */
     constructor({ start, end, interval, product, strategyType }) {
         this.startTime = start
         this.endTime = end
@@ -16,6 +24,9 @@ class BackTester {
         })
     }
 
+    /**
+     * Begin the backtester
+     */
     async begin() {
         try{
             const history = await this.historical.getData()
@@ -58,6 +69,10 @@ class BackTester {
         }
     }
 
+    /**
+     * The backtester's on-buy-signal handler
+     * @param {*} { price, time } the destructed set of the price and time to open the position
+     */
     async onBuySignal({ price, time }) {
         console.log('BUY SIGNAL')
         const id = randomstring.generate(20)
@@ -70,6 +85,10 @@ class BackTester {
 
     }
 
+    /**
+     * The backtester's on-sell-signal handler
+     * @param {*} { price, size, position, time } the destructed set of price, time, amount, and current position to close said position
+     */
     async onSellSignal({ price, size, position, time }) {
         console.log('SELL SIGNAL')
         this.strategy.positionClosed({

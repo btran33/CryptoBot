@@ -14,6 +14,9 @@ class SimpleStrategy extends Strategy {
         const exit_price = last
 
         const open = this.openPosition()
+
+        /* General strategy to buy when the last & penultimate candlesticks' price
+           indicate a drop/rise in price, indicating the time to buy/sell */
         if (open.length == 0) {
             if (last < penUltimate) {
                 
