@@ -1,7 +1,7 @@
 const program = require('commander')
 const config = require('./src/configuration')
-const historical = require('./src/historical')
 const BackTester = require('./src/backtester')
+const Trader = require('./src/trader')
 
 // Get the current and yesterday's time as the default for Commander
 const now = new Date()
@@ -13,6 +13,7 @@ program.version('1.0.0')
        .option('-s, --start <int>', 'Start time in Unix seconds', toDate, yesterday)
        .option('-e, --end <int>', 'End time in Unix seconds', toDate, now)
        .option('-t, --strategy <string>', 'Strategy type, in string', 'macd')
+       .option('-l, --live', 'Run bot on live')
        .parse(process.argv)
 
 /**
@@ -26,14 +27,21 @@ function toDate(ms) {
 
 const main = async function () {
     console.log(program.opts())
-    
-    const { interval, product, start, end, strategy } = program.opts()
+    const { interval, product, start, end, strategy, live } = program.opts()
 
-    const tester = new BackTester({ 
-        start, end, interval, product, strategyType: strategy 
-    })
+    if (live) {
+        const trader = new Trader({
+            start, end, interval, product, strategyType: strategy
+        })
+        await trader.begin()
+    } 
+    else {
+        const tester = new BackTester({ 
+            start, end, interval, product, strategyType: strategy 
+        })
+        await tester.begin()
+    }
 
-    await tester.begin()
 }
 
 /* For authenticated client, will utilized later down the line */
