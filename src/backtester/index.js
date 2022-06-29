@@ -1,39 +1,17 @@
-const CandleStick = require('../models/candlestick')
-const Historical = require('../historical')
-const { SimpleStrategy, SimpleMACD, Factory } = require('../strategy')
+const Runner = require('../runner')
 const randomstring = require('randomstring')
 const colors = require('colors/safe')
 
 /**
  * The class representing the backtester for our strategies
  */
-class BackTester {
-    
-    /**
-     * Constructor of the backtester object
-     * @param {*} { start, end, interval, product, strategyType } destructed set of our start time, end time, historical interval, cryptocurrency name, and strategy name
-     */
-    constructor({ start, end, interval, product, strategyType }) {
-        this.startTime = start
-        this.endTime = end
-        this.interval = interval
-        this.product = product
-        this.strategyType = strategyType
-        this.historical = new Historical({
-            start, end, interval, product
-        })
-    }
-
+class BackTester extends Runner {
     /**
      * Begin the backtester
      */
     async begin() {
         try{
             const history = await this.historical.getData()
-            this.strategy = Factory.create(this.strategyType, {
-                onBuySignal: (x) => { this.onBuySignal(x) },
-                onSellSignal: (x) => { this.onSellSignal(x) }
-            })
 
             await Promise.all(history.map((stick, index) => {
                 const sticks = history.slice(0, index + 1)
