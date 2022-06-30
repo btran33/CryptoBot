@@ -21,26 +21,8 @@ class BackTester extends Runner {
                 })
             }))
 
-            const positions = this.strategy.getPositions()
-            positions.forEach((p) => {
-                p.print()
-            })
-
-            console.log(positions.length, 'Positions')
-
-            positions.forEach((p, i) => {
-                if (p.enter === undefined || p.exit === undefined){
-                    console.log(`${i}th`, p)
-                }
-            })
-
-            const total = positions.reduce((r, p) => {
-                return r +  p.profit()
-            }, 0)
-
-            const prof = `${total}`
-            const colored = total > 0 ? colors.green(prof) : colors.red(prof)
-            console.log(`Total: ${colored}`)
+            this.printPositions()
+            this.printProfit()
 
         } catch (e) {
             console.log('BackTester Error:', e)
@@ -60,7 +42,6 @@ class BackTester extends Runner {
             amount: 1.0,
             id: id
         })
-
     }
 
     /**
