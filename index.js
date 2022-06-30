@@ -26,7 +26,7 @@ function toDate(ms) {
 }
 
 const main = async function () {
-    console.log(program.opts())
+    console.log('Bot config:\n',program.opts())
     const { interval, product, start, end, strategy, live } = program.opts()
 
     if (live) {

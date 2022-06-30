@@ -14,7 +14,7 @@ class CandleStick {
             this.close = close || price
             this.interval = interval
             this.startTime = startTime
-            this.volume = volume || 0
+            this.volume = volume || 1e-5
             this.state = close ? 'close' : 'open'
     }
 
@@ -24,6 +24,29 @@ class CandleStick {
      */
     average() {
         return (this.close + this.low + this.high) / 3
+    }
+
+    /**
+     * Function to update our candlestick, given the price, volume and time input
+     * @param {*} {price, volume, time} Destructed set of new price, volume, and time 
+     */
+    onPrice({ price, volume, time = new Date() }) {
+        if (this.state === 'closed') { 
+            throw new Error('Adding to closed candlestick!') 
+        }
+        
+        this.volume += volume
+
+        if (this.high < price) { this.high = price }
+        if (this.low > price) { this.low = price }
+
+        this.close = price
+
+        const delta = (time - this.startTime) * 1e-3 // JS time is in milisecs
+
+        if (delta >= this.interval) {
+            this.state = 'close'
+        }
     }
 }
 

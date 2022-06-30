@@ -25,9 +25,11 @@ class HistoricalService {
      */
     async getData() {
         const intervals = this.createRequest()
-        const result = await this.performIntervals(intervals)
-        console.log('Total:', result.length)
 
+        console.log('\nPartitioning intervals...')
+        const result = await this.performIntervals(intervals)
+
+        console.log('Total:', result.length)
         const filtered = this.filterData(result)
         console.log('Filtered:', filtered.length)
 
@@ -96,13 +98,15 @@ class HistoricalService {
          *        Time        Low       High      Open     Close      Volume
          *     [ 1654727100, 30285.47, 30305.58, 30295.25, 30300.14, 9.69855446 ] 
          * NOTE: will give history in descending time */
-        const result = await this.client.getProductHistoricRates(this.product, 
-            {
-                start, 
-                end, 
-                granularity: this.interval
-            })
-        return result
+        try {
+            const result = await this.client.getProductHistoricRates(this.product, 
+                {
+                    start, 
+                    end, 
+                    granularity: this.interval
+                })
+            return result
+        } catch (err) { throw new Error(`Unsupported granularity of: ${this.interval}`) }
     }
 
     /**

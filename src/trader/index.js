@@ -53,14 +53,31 @@ class Trader extends Runner {
 
     /**
      * Handle the incoming ticks of the market live-feed
-     * @param {*} tick 
+     * @param {*} tick the live tick of the trades, an example of the format is: 
+     * {
+        type: 'ticker',
+        sequence: 562428992,
+        product_id: 'BTC-USD',
+        price: '20110.77',
+        open_24h: '22000',
+        volume_24h: '363.16891040',
+        low_24h: '10020.65',
+        high_24h: '22222',
+        volume_30d: '50487.66038240',
+        best_bid: '20059.60',
+        best_ask: '20110.77',
+        side: 'buy',
+        time: '2022-06-30T00:50:58.113766Z',
+        trade_id: 39118692,
+        last_size: '0.00063481'
+        }
      */
     async onTick(tick) {
         const parseTime = Date.parse(tick.time)
         const time = isNaN(parseTime) ? new Date() : new Date(parseTime)
         const price = parseFloat(tick.price)
         const volume = parseFloat(tick.last_size)
-        console.log(`\nTime: ${time}    Price: $${price.toFixed(2)}    Volume: ${volume}`)
+        console.log(`\nTime: ${time}    Price: $${price.toFixed(2)}    Volume: ${volume}    Side: ${tick.side}`)
         
         try {
             // update/create our current candlestick
