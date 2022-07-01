@@ -1,6 +1,7 @@
 const Candlestick = require('../models/candlestick')
 const Runner = require('../runner')
 const Ticker = require('../ticker')
+const Broker = require('../broker')
 const randomstring = require('randomstring')
 const colors = require('colors/safe')
 
@@ -9,11 +10,14 @@ class Trader extends Runner {
     constructor(data){
         super(data)
 
+        this.isLive = data.live
+        this.funds = data.funds
         this.ticker = new Ticker({
             product: this.product,
             onTick: async (tick) => { await this.onTick(tick) },
             onError:      (error) => { this.onError(error) }
         })
+        this.broker = new Broker({ isLive: this.isLive })
     }
     
     async begin() {
@@ -28,12 +32,14 @@ class Trader extends Runner {
      */
      async onBuySignal({ price, time }) {
         console.log(colors.green('BUY SIGNAL!'))
+        const result = await this.broker.buy({ price, funds: this.funds })
+
         const id = randomstring.generate(20)
         this.strategy.positionOpened({
-            price, 
-            time,
-            amount: 1.0,
-            id: id
+            price: result.price, 
+            time, 
+            amount: result.size, 
+            id
         })
     }
 
@@ -43,10 +49,12 @@ class Trader extends Runner {
      */
     async onSellSignal({ price, size, position, time }) {
         console.log(colors.cyan('SELL SIGNAL!'))
+        const result = await this.broker.sell({ price, size})
+
         this.strategy.positionClosed({
-            price,
-            time,
-            amount: size,
+            price: result.price, 
+            time, 
+            amount: result.size, 
             id: position.id
         })
     }
