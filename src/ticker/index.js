@@ -1,6 +1,7 @@
 const CoinbasePro = require('coinbase-pro')
 const config = require('../configuration')
 
+const wsURL = config.get('COINBASE_WS_URL')
 /**
  * The class to set up a live feed on selling/trading of a product in the crypto market
  */
@@ -16,7 +17,7 @@ class Ticker {
         this.running = true
         this.client = new CoinbasePro.WebsocketClient(
             [this.product],
-            config.get('COINBASE_WS_URL'),
+            wsURL,
             null,
             { 
                 channels : ['ticker', 'heartbeat'] 

@@ -28,14 +28,14 @@ class SimpleStrategy extends Strategy {
         } else {
             if (last > penUltimate) {
                 open.forEach(p => {
-                    if (p.enter.price * 1.01 < exit_price){
+                    // if (p.enter.price * 1.01 < exit_price){
                         this.onSellSignal({ 
                             price: exit_price, 
                             size: p.enter.size, 
                             position: p,
                             time
                         })
-                    }
+                    // }
                 });
             }
         }

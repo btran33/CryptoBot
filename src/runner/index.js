@@ -29,11 +29,11 @@ class Runner {
             p.print()
         })
         console.log(positions.length, 'Positions')
-        positions.forEach((p, i) => {
-            if (p.enter === undefined || p.exit === undefined){
-                console.log(`${i}th`, p)
-            }
-        })
+        // positions.forEach((p, i) => {
+        //     if (p.enter === undefined || p.exit === undefined){
+        //         console.log(`${i}th`, p)
+        //     }
+        // })
     }
 
     printProfit() {
