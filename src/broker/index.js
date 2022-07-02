@@ -36,12 +36,15 @@ class Broker {
         try {
             switch (data) {
                 case 'received':
+                    console.log('Sale received!')
                     await this.handleReceived(data)
                     break
                 case 'done':
+                    console.log('Sale finished!')
                     await this.handleDone(data)
                     break
                 case 'match':
+                    console.log('Sale matched!')
                     await this.handleMatch(data)
                     break
                 default:
@@ -131,7 +134,7 @@ class Broker {
                 this.callbacks[token] = resolve
             })
         }
-        const data = this.generateMarketData(token, funds)
+        const data = this.generateMarketData({ token, funds })
         const order = await this.client.buy(data)
 
         if (order.message) {
@@ -147,6 +150,7 @@ class Broker {
         if (!this.isLive) {
             return {
                 price: price,
+                size: size,
                 funds : price * size 
             }
         }

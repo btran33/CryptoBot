@@ -30,10 +30,10 @@ class Position {
      */
     profit() {
         const fee = 0.0025
-        const entrance = (this.enter.price) * (1 + fee)
+        const entrance = (this.enter.price) * (this.enter.size + fee)
 
         if (this.exit) {
-            const exit = (this.exit.price)  * (1 - fee)
+            const exit = (this.exit.price)  * (this.exit.size - fee)
             return exit - entrance
         }
         return 0
@@ -51,8 +51,8 @@ class Position {
      * Print the position's information, including enter & exit price and time, as well as the profit
      */
     print() {
-        const enter = `Enter | ${colors.yellow(this.enter.price.toFixed(2))} | ${this.enter.time}`
-        const exit = this.exit ? `Exit | ${colors.magenta(this.exit.price.toFixed(2))} | ${this.exit.time}` : ''
+        const enter = `Enter | ${colors.yellow(this.enter.price.toFixed(2))} ${this.enter.size} = $${colors.green((this.enter.price * this.enter.size).toFixed(2))} | ${this.enter.time.toLocaleString('en-US')}`
+        const exit = this.exit ? `Exit | ${colors.magenta(this.exit.price.toFixed(2))} ${this.exit.size} = $${colors.green((this.exit.price * this.exit.size).toFixed(2))} | ${this.exit.time.toLocaleString('en-US')}` : ''
 
         var profit = ''
         if (this.state === 'closed'){

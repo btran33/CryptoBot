@@ -17,7 +17,7 @@ class Trader extends Runner {
             onTick: async (tick) => { await this.onTick(tick) },
             onError:      (error) => { this.onError(error) }
         })
-        this.broker = new Broker({ isLive: this.isLive })
+        this.broker = new Broker({ isLive: this.isLive, product: this.product })
     }
     
     async begin() {
@@ -33,7 +33,7 @@ class Trader extends Runner {
      async onBuySignal({ price, time }) {
         console.log(colors.green('BUY SIGNAL!'))
         const result = await this.broker.buy({ price, funds: this.funds })
-
+        
         const id = randomstring.generate(20)
         this.strategy.positionOpened({
             price: result.price, 
@@ -49,8 +49,8 @@ class Trader extends Runner {
      */
     async onSellSignal({ price, size, position, time }) {
         console.log(colors.cyan('SELL SIGNAL!'))
-        const result = await this.broker.sell({ price, size})
-
+        const result = await this.broker.sell({ price, size })
+        
         this.strategy.positionClosed({
             price: result.price, 
             time, 
@@ -81,11 +81,14 @@ class Trader extends Runner {
         }
      */
     async onTick(tick) {
+        // logging each tick's info
         const parseTime = Date.parse(tick.time)
         const time = isNaN(parseTime) ? new Date() : new Date(parseTime)
         const price = parseFloat(tick.price)
         const volume = parseFloat(tick.last_size)
-        console.log(`\nTime: ${time}    Price: $${price.toFixed(2)}    Volume: ${volume}    Side: ${tick.side}`)
+        const side = tick.side === 'buy' ? colors.magenta(tick.side) : colors.red(tick.side)
+        console.log(`\nTime: ${time.toLocaleString('en-US')}    Price: $${colors.yellow(price.toFixed(2))}`)
+        console.log(`Volume: ${colors.blue(volume)}    Total: $${colors.green((price * volume).toFixed(2))}     Side: ${side}`)
         
         try {
             // update/create our current candlestick
