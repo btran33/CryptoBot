@@ -23,6 +23,9 @@ class Runner {
         })
     }
 
+    /**
+     * Helper function to print out all the current positions in the market
+     */
     printPositions() {
         const positions = this.strategy.getPositions()
         positions.forEach((p) => {
@@ -36,6 +39,9 @@ class Runner {
         // })
     }
 
+    /**
+     * Helper function to print out the profit of all trades so far
+     */
     printProfit() {
         const positions = this.strategy.getPositions()
         const total = positions.reduce((r, p) => {
@@ -47,6 +53,7 @@ class Runner {
         console.log(`Total: ${colored}`)
     }
 
+    /* Functions to implement */
     async begin() {}
     async onBuySignal(data) {}
     async onSellSignal(data) {}

@@ -3,7 +3,7 @@ const config = require('../configuration')
 
 const wsURL = config.get('COINBASE_WS_URL')
 /**
- * The class to set up a live feed on selling/trading of a product in the crypto market
+ * The class to set up a non-user-authenticated live-feed on selling/trading of a product in the market
  */
 class Ticker {
     constructor({ product, onTick, onError }) {
@@ -13,6 +13,9 @@ class Ticker {
         this.running = false
     }
 
+    /**
+     * Start up the feed
+     */
     begin() {
         this.running = true
         this.client = new CoinbasePro.WebsocketClient(
@@ -42,6 +45,9 @@ class Ticker {
         })
     }
 
+    /**
+     * Stop the feed
+     */
     stop() {
         this.running = false
         this.client.close()

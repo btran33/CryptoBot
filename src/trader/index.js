@@ -5,8 +5,12 @@ const Broker = require('../broker')
 const randomstring = require('randomstring')
 const colors = require('colors/safe')
 
+/**
+ * A class representing the Trader in the market. Extended from the Runner class,
+ * this utilizes real-time feed, a broker to organize trades, and the initialized strategy,
+ * to analyze the market and signal the broker when to buy/sell.
+ */
 class Trader extends Runner {
-
     constructor(data){
         super(data)
 
@@ -20,11 +24,14 @@ class Trader extends Runner {
         this.broker = new Broker({ isLive: this.isLive, product: this.product })
     }
     
+    /**
+     * Start up the trader
+     */
     async begin() {
         this.currentCandle = null 
-        this.history = await this.historical.getData()
-        this.ticker.begin()
-        this.broker.begin()
+        this.history = await this.historical.getData()  // get the historical data
+        this.ticker.begin()                             // start the feed
+        this.broker.begin()                             // start the broker
     }
 
     /**

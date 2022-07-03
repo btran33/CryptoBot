@@ -1,11 +1,15 @@
 const CoinbasePro = require('coinbase-pro')
 const config = require('../configuration')
 
+// user-authentication info (make sure to include in config.json with the indicated keys)
 const key = config.get('COINBASE_API_KEY')
 const secret = config.get('COINBASE_API_SECRET')
 const passphrase = config.get('COINBASE_API_PASSPHRASE')
 const wsURL = config.get('COINBASE_WS_URL')
 
+/**
+ * A class representing the user-authenticated live-feed on selling/trading of a product in the market
+ */
 class Feed {
     constructor({ product, onUpdate, onError }) {
         this.product = product
@@ -14,6 +18,9 @@ class Feed {
         this.running = false
     }
 
+    /**
+     * Start up the feed
+     */
     async begin() {
         this.running = true
         this.socket = new CoinbasePro.WebsocketClient(
@@ -42,6 +49,9 @@ class Feed {
         })
     }
 
+    /**
+     * Stop the feed
+     */
     async stop() {
         this.running = false
         this.socket.close()

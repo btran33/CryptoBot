@@ -4,12 +4,14 @@ const config = require('../configuration')
 const uuid = require('uuid').v4
 const colors = require('colors/safe')
 
+// user-authentication info (make sure to include in config.json with the indicated keys)
 const key = config.get('COINBASE_API_KEY')
 const secret = config.get('COINBASE_API_SECRET')
 const passphrase = config.get('COINBASE_API_PASSPHRASE')
 const apiURL = config.get('COINBASE_API_URL')
+
 /**
- * Broker class to organize trades
+ * A Broker class to organize user-authenticated trades for the trader
  */
 class Broker {
     constructor({ isLive, orderType = 'market', product }) {
@@ -28,11 +30,18 @@ class Broker {
         this.orders = {}
     }
 
+    /**
+     * Start up the broker
+     */
     begin() {
         this.state = 'running'
         this.feed.begin()
     }
 
+    /**
+     * Handle updates of any transactions
+     * @param {*} data the data of the transactions
+     */
     async onUpdate(data) {
         try {
             switch (data) {
@@ -57,8 +66,8 @@ class Broker {
     }
 
     /**
-     * Handle when order is received
-     * @param {*} data 
+     * Helper function to handle when order is received
+     * @param {*} data the data of the order
      */
     async handleReceived(data) {
         const clientId = data['client_oid']
@@ -73,8 +82,8 @@ class Broker {
     }
 
     /**
-     * Handle when order is matched
-     * @param {*} data 
+     * Helper function to handle when order is matched
+     * @param {*} data the data of the order
      */
     async handleMatch(data) {
         const orderId = data['taker_order_id']
@@ -89,8 +98,8 @@ class Broker {
     }
 
     /**
-     * Handle when order is completed
-     * @param {*} data 
+     * Helper function to handle when order is completed
+     * @param {*} data the data of the order
      */
     async handleDone(data) {
         const orderId = data['order_id']
@@ -113,19 +122,16 @@ class Broker {
         lock(orderData)
     }
 
-    onError(error) {
-    }
+    onError(error) {}
 
-    async placeBuyOrder({ price, size }) {
-    }
+    async placeBuyOrder({ price, size }) {}
 
-    async placeSellOrder({ price, size }) {
-    }
+    async placeSellOrder({ price, size }) {}
 
     /**
      * The broker's buying function, which generates and submit the market order
      * @param {*} {price, funds} destructed set of product price and available funds 
-     * @returns a Promise to resolve the callback on the buyingorder
+     * @returns a Promise to resolve the callback on the buying order
      */
     async buy({ price, funds }) {
         if (!this.isLive) {
@@ -167,8 +173,7 @@ class Broker {
     /**
      * The broker's selling function, which generates and submit the market order 
      * @param {*} {price, size} destructed set of product price and size to sell
-     * @returns a Promise to resolve the callback on the selling 
-     * order
+     * @returns a Promise to resolve the callback on the selling order
      */
     async sell({ price, size }) {
         if (!this.isLive) {

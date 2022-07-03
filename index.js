@@ -48,12 +48,4 @@ const main = async function () {
 
 }
 
-/* For authenticated client, will utilized later down the line */
-// const key = config.get('COINBASE_API_KEY')
-// const secret = config.get('COINBASE_API_SECRET')
-// const passphrase = config.get('COINBASE_API_PASSPHRASE')
-// const apiURL = config.get('COINBASE_API_URL')
-// const auth_client = new CoinbasePro.AuthenticatedClient(key, secret, 
-//                                                         passphrase, apiURL);
-
 main()

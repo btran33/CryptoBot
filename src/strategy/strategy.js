@@ -55,10 +55,9 @@ class Strategy {
      * @param {*} {price, time, amount, id} the current price, time of creation, amount to sell, and ID of the position
      */
     async positionClosed({ price, time, amount, id }) {
-        const trade = new Trade({ price, time, size: amount })
         const position = this.positions[id]
-
         if (position) {
+            const trade = new Trade({ price, time, size: amount })
             position.close({ trade })
         }
     }
