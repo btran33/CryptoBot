@@ -24,6 +24,7 @@ class Trader extends Runner {
         this.currentCandle = null 
         this.history = await this.historical.getData()
         this.ticker.begin()
+        this.broker.begin()
     }
 
     /**
@@ -33,7 +34,11 @@ class Trader extends Runner {
      async onBuySignal({ price, time }) {
         console.log(colors.green('BUY SIGNAL!'))
         const result = await this.broker.buy({ price, funds: this.funds })
-        
+        if (!result) {
+            console.log('No result on buying :(')
+            return
+        }
+
         const id = randomstring.generate(20)
         this.strategy.positionOpened({
             price: result.price, 
@@ -50,7 +55,11 @@ class Trader extends Runner {
     async onSellSignal({ price, size, position, time }) {
         console.log(colors.cyan('SELL SIGNAL!'))
         const result = await this.broker.sell({ price, size })
-        
+        if (!result) {
+            console.log('No result on selling :(')
+            return
+        }
+    
         this.strategy.positionClosed({
             price: result.price, 
             time, 

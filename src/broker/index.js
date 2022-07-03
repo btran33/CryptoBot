@@ -1,7 +1,7 @@
 const Coinbase = require('coinbase-pro')
 const Feed = require('../feed')
 const config = require('../configuration')
-const uuid = require('uuid')
+const uuid = require('uuid').v4
 
 const key = config.get('COINBASE_API_KEY')
 const secret = config.get('COINBASE_API_SECRET')
@@ -115,6 +115,17 @@ class Broker {
     onError(error) {
     }
 
+    async placeBuyOrder({ price, size }) {
+    }
+
+    async placeSellOrder({ price, size }) {
+    }
+
+    /**
+     * The broker's buying function, which generates and submit the market order
+     * @param {*} {price, funds} destructed set of product price and available funds 
+     * @returns a Promise to resolve the callback on the buyingorder
+     */
     async buy({ price, funds }) {
         if (!this.isLive) {
             return { 
@@ -134,18 +145,30 @@ class Broker {
                 this.callbacks[token] = resolve
             })
         }
-        const data = this.generateMarketData({ token, funds })
-        const order = await this.client.buy(data)
+        
+        try {
+            const data = this.generateMarketData({ token, funds })
+            order = await this.client.buy(data)
 
-        if (order.message) {
+            if (order.message) {
+                this.state = 'running'
+                throw new Error(order.message)
+            }
+            const filled = await lock()
             this.state = 'running'
-            throw new Error(order.message)
+            return filled
+        } catch (error) {
+            this.state = 'running'
+            throw new Error(error['data'])
         }
-
-        const filled = await lock()
-        return filled
     }
-
+    
+    /**
+     * The broker's selling function, which generates and submit the market order 
+     * @param {*} {price, size} destructed set of product price and size to sell
+     * @returns a Promise to resolve the callback on the selling 
+     * order
+     */
     async sell({ price, size }) {
         if (!this.isLive) {
             return {
@@ -160,25 +183,36 @@ class Broker {
 
         const token = uuid()
         this.tokens[token] = 'sell'
-
+        
         const lock = () => {
             return new Promise((resolve, reject) => {
                 this.callbacks[token] = resolve
             })
         }
 
-        const data = this.generateMarketData({ token, size })
-        const order = await this.client.sell(data)
+        try {
+            const data = this.generateMarketData({ token, size })
+            order = await this.client.sell(data)
 
-        if(order.message){
+            if(order.message){
+                this.state = 'running'
+                throw new Error(order.message)
+            }
+            const filled = await lock()
             this.state = 'running'
-            throw new Error(order.message)
+            return filled
+        } catch (error) {
+            this.state = 'running'
+            throw new Error(error['data'])
         }
 
-        const filled = await lock()
-        return filled
     }
 
+    /**
+     * Create market order (i.e. the order at the current market price)
+     * @param {*} {token, funds, size} destructed set of the order's token, funds/size depending on buy/sell 
+     * @returns 
+     */
     generateMarketData({ token, funds, size }) {
         const order = {
             product_id: this.product,
@@ -188,6 +222,20 @@ class Broker {
 
         const amount = funds ? { funds } : { size }
         return Object.assign(order, amount)
+    }
+
+    /**
+     * Create limit order (i.e. the order with a limit of min/max price)
+     * @param {*} {token, funds, size, price} destructed set of the order's token, funds/size
+     */
+    generateLimitData({ token, funds, size, price }) {
+        const order = {
+            product_id: this.product,
+            type: 'limit',
+            client_oid: token,
+            size: size,
+            price: price
+        }
     }
 }
 
