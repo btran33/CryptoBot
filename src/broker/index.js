@@ -2,6 +2,7 @@ const Coinbase = require('coinbase-pro')
 const Feed = require('../feed')
 const config = require('../configuration')
 const uuid = require('uuid').v4
+const colors = require('colors/safe')
 
 const key = config.get('COINBASE_API_KEY')
 const secret = config.get('COINBASE_API_SECRET')
@@ -158,11 +159,11 @@ class Broker {
             this.state = 'running'
             return filled
         } catch (error) {
-            this.state = 'running'
-            throw new Error(error['data'])
+            const msg = error['data']['message']
+            throw new Error(colors.red(msg === 'Insufficient funds' ? `${msg}, please add money to your account!` : msg))
         }
     }
-    
+
     /**
      * The broker's selling function, which generates and submit the market order 
      * @param {*} {price, size} destructed set of product price and size to sell
@@ -202,8 +203,8 @@ class Broker {
             this.state = 'running'
             return filled
         } catch (error) {
-            this.state = 'running'
-            throw new Error(error['data'])
+            const msg = error['data']['message']
+            throw new Error(colors.red(msg === 'Insufficient funds' ? `${msg}, please add money to your account!` : msg))
         }
 
     }
