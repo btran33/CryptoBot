@@ -12,4 +12,4 @@ ENV NODE_PATH src
 ENV NODE_ENV production
 
 ENTRYPOINT [ "node", "index.js" ]
-CMD ["--strategy", "simple", "--fund", "100", "--type", "trader"]
+CMD ["--strategy", "simple", "--funds", "100", "--type", "trader"]
