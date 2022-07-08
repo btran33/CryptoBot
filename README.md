@@ -1,5 +1,7 @@
 # CryptoBot
-A cryptocurrency trading bot, built on Node.js and Coinbase API. Prepackaged with Simple and MACD trading strategy.
+A cryptocurrency trading bot, built on Node.js and Coinbase API. Pre-packaged with Simple and MACD trading strategy.
+
+![cryptobot](https://user-images.githubusercontent.com/70242197/178078472-071e1178-4f72-463e-9331-b59bedb1f16c.gif)
 
 ## Preface
 This is my first attempt at creating a bot using Node.js, as well as interacting with third-party APIs. There will be a lot of documentation in each class for the readers' and my own sake. Feel free to modify the trading strategy once you understand how the backend works. \
