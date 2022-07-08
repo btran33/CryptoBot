@@ -31,7 +31,7 @@ class CandleStick {
      * @param {*} {price, volume, time} Destructed set of new price, volume, and time 
      */
     onPrice({ price, volume, time = new Date() }) {
-        if (this.state === 'closed') { 
+        if (this.state === 'close') { 
             throw new Error('Adding to closed candlestick!') 
         }
         

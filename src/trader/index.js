@@ -133,21 +133,16 @@ class Trader extends Runner {
 
             // run our strategy
             await this.strategy.run({ sticks, time})
-            console.log(`Successfully ran ${this.strategyType} strategy! Current profit: $${this.totalProfit}`)
+            console.log(`Successfully ran ${this.strategyType} strategy! Current profit: $${(this.totalProfit).toFixed(2)}`)
             this.printPositions()
 
             // update history to have our new candle
-            if (this.currentCandle.state === 'closed') {
+            if (this.currentCandle.state === 'close') {
                 const candle = this.currentCandle
                 this.currentCandle = null
                 this.history.push(candle)
 
                 this.printProfit()
-                const positions = this.strategy.getPositions()
-                const total = positions.reduce((r, p) => {
-                    return r +  p.profit()
-                }, 0)
-                console.log(`---------------------------------------------------------------------- ${total}`)
             }
         } catch (err) {
             console.log('Tick-handler Error:', err)
