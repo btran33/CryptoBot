@@ -8,7 +8,7 @@ This is my first attempt at creating a bot using Node.js, as well as interacting
 In addition, the plan is to have the bot dockerized and hosted on my Raspberri Pi 3B+, so instructions on [Docker](#docker) will be down below.
 
 ## Get Started
-Before we begin with the setup, make sure you signed up for [Coinbase Pro](https://pro.coinbase.com) and create an API key. Store your information in a **config.json** file in the root directory with the content layout as follow, replacing placeholder name with your API information as needed: 
+Before we begin with the setup, make sure you signed up for [Coinbase Pro](https://pro.coinbase.com) and create an API key. Create a JSON file called **config.json** in the root directory and store your API information with the content layout as follow, replacing placeholder name as needed: 
 ```
 {
     "COINBASE_API_KEY": "YOUR_API_KEY",
