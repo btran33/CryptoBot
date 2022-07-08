@@ -29,12 +29,10 @@ class Position {
      * @returns the calculated profit of the trade, fee included
      */
     profit() {
-        // TODO: fix the fee of tradings
-        const fee = 0.0025
-        const entrance = (this.enter.price) * (this.enter.size + fee)
+        const entrance = (this.enter.price) * (this.enter.size)
 
         if (this.exit) {
-            const exit = (this.exit.price)  * (this.exit.size - fee)
+            const exit = (this.exit.price)  * (this.exit.size)
             return exit - entrance
         }
         return 0

@@ -16,6 +16,7 @@ class Trader extends Runner {
 
         this.isLive = data.live
         this.funds = data.funds
+        this.totalProfit = 0
         this.ticker = new Ticker({
             product: this.product,
             onTick: async (tick) => { await this.onTick(tick) },
@@ -66,15 +67,20 @@ class Trader extends Runner {
             console.log('No result on selling :(')
             return
         }
-    
+        // TODO: decide if bot should update allowable funds on every positive sell
+        // this.funds = result.price * result.size // update funds
+        this.totalProfit += ((result.price * result.size).toFixed(2)) - this.funds
+        
         this.strategy.positionClosed({
             price: result.price, 
             time, 
             amount: result.size, 
             id: position.id
         })
-    }
 
+        console.log(result.price * result.size)
+    }
+    
     /**
      * Handle the incoming ticks of the market live-feed
      * @param {*} tick the live tick of the trades, an example of the format is: 
@@ -127,7 +133,7 @@ class Trader extends Runner {
 
             // run our strategy
             await this.strategy.run({ sticks, time})
-            console.log(`Successfully ran ${this.strategyType} strategy!`)
+            console.log(`Successfully ran ${this.strategyType} strategy! Current profit: $${this.totalProfit}`)
             this.printPositions()
 
             // update history to have our new candle
@@ -137,6 +143,11 @@ class Trader extends Runner {
                 this.history.push(candle)
 
                 this.printProfit()
+                const positions = this.strategy.getPositions()
+                const total = positions.reduce((r, p) => {
+                    return r +  p.profit()
+                }, 0)
+                console.log(`---------------------------------------------------------------------- ${total}`)
             }
         } catch (err) {
             console.log('Tick-handler Error:', err)

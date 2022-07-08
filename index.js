@@ -4,6 +4,7 @@ const BackTester = require('./src/backtester')
 const Trader = require('./src/trader')
 const Ticker = require('./src/ticker')
 const Feed = require('./src/feed')
+const trader = require('./src/trader')
 
 // Get the current and yesterday's time as the default for Commander
 const now = new Date()
@@ -32,9 +33,9 @@ function toDate(ms) {
 const main = async function () {
     console.log('Bot config:\n',program.opts())
     const { interval, product, start, end, strategy, funds, live, type } = program.opts()
-
+    var trader = null
     if (type === 'trader') {
-        const trader = new Trader({
+        trader = new Trader({
             start, end, interval, product, strategyType: strategy, live, funds
         })
         await trader.begin()
@@ -45,7 +46,13 @@ const main = async function () {
         })
         await tester.begin()
     }
-
+    
+    process.on('SIGINT', () => {
+        console.log(`\nHistory length: ${trader.history.length}`)
+        throw new Error("Exiting...")
+    })
 }
+
+    
 
 main()
